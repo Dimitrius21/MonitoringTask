@@ -1,0 +1,40 @@
+server:
+  port: 8080
+spring:
+  application:
+    name: monitor-service
+  datasource:
+    url: jdbc:postgresql://localhost:5432/monitor
+    username: postgres
+    password: 1234
+  jpa:
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+    open-in-view: false
+#    hibernate:
+#      ddl-auto: validate
+  data:
+    web:
+      pageable:
+        default-page-size: 20
+        max-page-size: 40
+  liquibase:
+    enabled: true
+    contexts: dev
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
+  graphql:
+    graphiql:
+      enabled: true
+rabbit:
+  queue:
+    email: email.direct
+  routing-key:
+    email: email
+  exchange:
+    email: email.directExchange

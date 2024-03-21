@@ -1,0 +1,31 @@
+input EmailInput{
+  email : String!
+}
+
+input LimitInput{
+  componentId: Int!
+  level: Int!
+  threshold: Int!
+}
+
+input ComponentInput{
+  componentId: Int!
+  description: String
+}
+
+input ComponentChangeEmails{
+  componentId: Int!
+  email: String!
+  actionType: Int!
+}
+
+type Mutation{
+  createComponent(component : ComponentInput!): Component
+  deleteComponent(componentId: Int!): Boolean
+  changeEmailsForMails(emailChange: ComponentChangeEmails!): Boolean
+  createEmail(email: String!):Email
+  createLimit(limit: LimitInput!):Limit
+  deleteEmail(email: String!): Boolean
+  deleteLimit(componentId: Int!, level: Int!): Boolean
+  updateLimit(limit: LimitInput!): Limit
+}

@@ -1,0 +1,55 @@
+version: '3.5'
+services:
+  db:
+    image: postgres:alpine
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: '1234'
+      POSTGRES_DB: monitor      
+    ports:
+      - "5432:5432"
+    volumes:
+      - db:/var/lib/postgresql/data
+
+  rabbitmq:
+    container_name: rabbitmqOfMonitor
+    image: rabbitmq:management-alpine
+    hostname: app-rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    volumes:
+      - ./init_r/rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf:ro
+      - ./init_r/definitions.json:/etc/rabbitmq/definitions.json:ro
+
+  mails:
+    build:
+      context: ./MailService
+    container_name: mail-service
+    restart: always
+    environment:      
+      SPRING_RABBITMQ_HOST: rabbitmq 
+    ports:
+      - "8081:8081"
+    depends_on:    
+      - rabbitmq
+
+  system-monitor:
+    build:
+      context: ./SystemMonitor
+    container_name: system-monitor-service
+    restart: always
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db      
+      - rabbitmq      
+    environment:      
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/monitor
+      SPRING_RABBITMQ_HOST: rabbitmq      
+
+volumes:
+  db:
+
+

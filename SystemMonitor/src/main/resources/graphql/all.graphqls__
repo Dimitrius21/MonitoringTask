@@ -1,0 +1,56 @@
+type Query {
+  notificationById(id: ID): Notification
+  notifications(componentId: Int, level: Int, page: Int, size: Int): [Notification]!
+  emails: [Email]
+  limits: [Limit]!
+  limitOne(componentId: Int!, level: Int!): Limit
+  components: [Component]!
+  componentById(componentId : Int!):Component
+}
+
+type Email {
+  id: ID
+  email: String
+}
+
+type Notification {
+  id: ID
+  happened: String
+  componentId: Int
+  level: Int
+  description: String
+}
+
+type Limit{
+  componentId: Int
+  level: Int
+  quantity: Int
+  threshold: Int
+}
+
+type Component{
+  componentId: Int
+  description: String
+  emails: [Email]
+}
+
+input EmailInput{
+  email : String!
+}
+
+input LimitInput{
+  componentId: Int!
+  level: Int!
+  threshold: Int!
+}
+
+input ComponentInput{
+  componentId: Int!
+  description: String
+}
+
+type Mutation{
+  createComponent(component : ComponentInput): Component
+  createEmail(email: String):Email
+  createLimit(limit: LimitInput):Limit
+}
